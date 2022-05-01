@@ -155,5 +155,6 @@ while True:
 
         if (is_hit(ds_x, ds_y, cacti_x, cacti_y, cacti_shift)):
             print("hit")
+            gg = True
     pygame.display.update()
     #===主程式結束===
