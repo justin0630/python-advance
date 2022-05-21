@@ -12,7 +12,6 @@ from pygame.locals import *
 pygame.init()
 clock = pygame.time.Clock()
 timer = 0
-MISSILE_MAX = 200
 #***初始化設定結束***
 
 #===載入圖片開始===
@@ -24,7 +23,6 @@ img_sship = [
 ]
 
 img_burn = pygame.image.load("starship_burner.png")
-img_weapon = pygame.image.load("bullet.png")
 #***載入圖片結束***
 
 #===遊戲視窗設定開始===
@@ -87,32 +85,6 @@ def move_starship(win, key, timer):
 #***我機設定結束***
 
 #===飛彈設定開始===
-msl_no = 0
-msl_f = [False] + MISSILE_MAX
-msl_x = [0] + MISSILE_MAX
-msl_y = [0] + MISSILE_MAX
-msl_wh = img_weapon.get_wiidth() / 2
-msl_hh = img_weapon.get_height() / 2
-msl_shift = 30
-
-
-def move_missile(win, key):
-    global msl_f, msl_x, msl_y, msl_no
-    if key[K_SPACE]:
-        if msl_f[msl_no] == False:
-            msl_f[msl_no] = True
-            msl_x[msl_no] = ss_x - msl_wh
-            msl_y[msl_no] = ss_y - msl_hh
-            msl_no += 1
-            msl_no %= MISSILE_MAX
-
-    for i in range(MISSILE_MAX):
-        if msl_f[i] == True:
-            msl_y[i] -= msl_shift
-            win.blit(img_weapon, [msl_x[i], msl_y[i]])
-        if msl_y[i] < 0:
-            msl_f[i] = False
-
 
 #***飛彈設定結束***
 
@@ -148,8 +120,6 @@ while True:
                 screen = pygame.display.set_mode(bg_size)
     roll_bg(screen)
     move_starship(screen, key, timer)
-    move_missile(screen, key)
-
     pygame.display.update()
 
 #===主程式結束===

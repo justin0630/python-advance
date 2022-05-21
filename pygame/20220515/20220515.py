@@ -3,6 +3,7 @@ from turtle import begin_poly
 import pygame
 import sys
 import os
+import random
 
 os.chdir(sys.path[0])
 from pygame.locals import *
@@ -25,6 +26,7 @@ img_sship = [
 
 img_burn = pygame.image.load("starship_burner.png")
 img_weapon = pygame.image.load("bullet.png")
+img_enemy = pygame.image.load("enemy1.png")
 #***載入圖片結束***
 
 #===遊戲視窗設定開始===
@@ -88,23 +90,24 @@ def move_starship(win, key, timer):
 
 #===飛彈設定開始===
 msl_no = 0
-msl_f = [False] + MISSILE_MAX
-msl_x = [0] + MISSILE_MAX
-msl_y = [0] + MISSILE_MAX
-msl_wh = img_weapon.get_wiidth() / 2
+msl_f = [False] * MISSILE_MAX
+msl_x = [0] * MISSILE_MAX
+msl_y = [0] * MISSILE_MAX
+msl_wh = img_weapon.get_width() / 2
 msl_hh = img_weapon.get_height() / 2
 msl_shift = 30
 
 
-def move_missile(win, key):
+def move_missile(win, key, timer):
     global msl_f, msl_x, msl_y, msl_no
     if key[K_SPACE]:
-        if msl_f[msl_no] == False:
-            msl_f[msl_no] = True
-            msl_x[msl_no] = ss_x - msl_wh
-            msl_y[msl_no] = ss_y - msl_hh
-            msl_no += 1
-            msl_no %= MISSILE_MAX
+        if timer % 10 == 0:
+            if msl_f[msl_no] == False:
+                msl_f[msl_no] = True
+                msl_x[msl_no] = ss_x - msl_wh
+                msl_y[msl_no] = ss_y - msl_hh
+                msl_no += 1
+                msl_no %= MISSILE_MAX
 
     for i in range(MISSILE_MAX):
         if msl_f[i] == True:
@@ -117,6 +120,25 @@ def move_missile(win, key):
 #***飛彈設定結束***
 
 #===敵機設定開始===
+emy_f = False
+emy_x = 0
+emy_y = bg_y + 10
+emy_wh = img_enemy.get_width() / 2
+emy_hh = img_enemy.get_height() / 2
+emy_shift = 5
+
+
+def move_enemy(win):
+    global emy_f, emy_x, emy_y
+    if emy_y > bg_y:
+        emy_f = True
+        emy_x = random.randint(emy_wh, bg_x - emy_wh)
+        emy_y = random.randint(emy_hh, emy_hh + 100)
+
+    if emy_f == True:
+        emy_y += emy_shift
+        win.blit(img_enemy, [emy_x - emy_wh, emy_y - emy_hh])
+
 
 #***敵機設定結束***
 
@@ -148,8 +170,8 @@ while True:
                 screen = pygame.display.set_mode(bg_size)
     roll_bg(screen)
     move_starship(screen, key, timer)
-    move_missile(screen, key)
-
+    move_missile(screen, key, timer)
+    move_enemy(screen)
     pygame.display.update()
 
 #===主程式結束===
