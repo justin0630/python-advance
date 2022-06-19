@@ -1,1 +1,0 @@
-    pygame.image.load("enemy3.png")
